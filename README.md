@@ -1,3 +1,4 @@
+[English](README.md) | [Español](README.es.md)
 # llm-wiki
 
 A skill for building and maintaining persistent, interlinked Markdown wikis from raw sources. The LLM writes and maintains all wiki content; you curate sources, direct analysis, and ask questions.
