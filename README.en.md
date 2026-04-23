@@ -1,4 +1,5 @@
-[Español](README.md) | [English](README.en.md)
+[Español](README.md) | [English](README.es.md)
+
 # llm-wiki
 
 A skill for building and maintaining persistent, interlinked Markdown wikis from raw sources. The LLM writes and maintains all wiki content; you curate sources, direct analysis, and ask questions.
@@ -13,7 +14,7 @@ Inspired by [Karpathy's LLM Wiki pattern](https://gist.github.com/karpathy/442a6
 
 RAG re-discovers the same relationships from scratch on every query. Nothing accumulates.
 
-This skill compiles your sources into a wiki once and keeps it current. Concepts get their own pages. Pages link to each other. Every claim is tagged for provenance. When you archive a query answer, future queries use it as context. Your explorations compound.
+This skill compiles your sources into a wiki once and keeps it current. Concepts get their own pages. Pages link to each other. Every claim carries its source. When you archive a query answer, future queries use it as context. Your explorations compound.
 
 ```
 RAG:      query → search chunks → answer → forget
@@ -22,24 +23,24 @@ llm-wiki: sources → compile → wiki → query → archive → richer wiki →
 
 ## Who it's for
 
-Anyone working with multiple documents who wants a structured knowledge base instead of a folder of files. Domain-agnostic: academic research, legal analysis, intelligence work, journalism, personal knowledge management, or any field where sources accumulate and need to be synthesized.
+Researchers, analysts, journalists, and anyone working across multiple documents who needs synthesis, not just retrieval. Academic research, legal analysis, intelligence work, journalism, personal knowledge management — any field where sources accumulate.
 
 ## Requirements
 
 - Any LLM with file read/write capability (Claude, ChatGPT, Gemini, or others)
-- [Obsidian](https://obsidian.md) as primary client (optional but assumed by the skill's conventions)
+- [Obsidian](https://obsidian.md) as primary client (optional, but the skill's conventions assume it)
 - No executables, no scripts, no external dependencies
 
 ## Installation
 
 ### Claude (claude.ai / Claude Code)
 
-**Option A — npx skills:**
+**Option A:** npx skills
 ```bash
 npx skills add git@github.com:hypr-lupo/llm-wiki.git
 ```
 
-**Option B — manual:**
+**Option B:** manual
 ```bash
 mkdir -p ~/.claude/skills/llm-wiki
 curl -fsSL https://raw.githubusercontent.com/hypr-lupo/llm-wiki/main/SKILL.md \
@@ -48,11 +49,11 @@ curl -fsSL https://raw.githubusercontent.com/hypr-lupo/llm-wiki/main/SKILL.md \
 
 ### ChatGPT / Gemini / Other LLMs
 
-Paste the contents of `SKILL.md` into your system prompt or custom instructions. The skill is written in Spanish and contains no provider-specific syntax.
+Paste the contents of `SKILL.md` into your system prompt or custom instructions.
 
 ## Usage
 
-Trigger the skill in Spanish by telling your LLM:
+Tell your LLM:
 
 | Command | Action |
 |---|---|
@@ -62,7 +63,7 @@ Trigger the skill in Spanish by telling your LLM:
 | `auditar wiki` | Run a health check on the wiki |
 | `cerrar sesión` | Generate a pending-tasks log for the session |
 
-See [`docs/flujo-de-trabajo.md`](docs/flujo-de-trabajo.md) for the full operational workflow.
+Full workflow: [`docs/flujo-de-trabajo.md`](docs/flujo-de-trabajo.md)
 
 ## Wiki structure
 
@@ -85,7 +86,7 @@ See [`docs/flujo-de-trabajo.md`](docs/flujo-de-trabajo.md) for the full operatio
 
 ## Provenance system
 
-Every claim in the wiki is tagged for traceability using standard Markdown footnotes — compatible with Pandoc export to DOCX, LaTeX, PDF, and HTML.
+Every claim in the wiki declares its source using named Markdown footnotes, compatible with Pandoc export to DOCX, LaTeX, PDF, and HTML.
 
 Three categories:
 
@@ -93,7 +94,7 @@ Three categories:
 |---|---|
 | `[^ext-N]` | Directly extracted from a source |
 | `[^inf-N]` | Inferred by the LLM from one or more sources (with confidence 0.0–1.0) |
-| `[^amb-N]` | Ambiguous — sources conflict, flagged for human review |
+| `[^amb-N]` | Sources conflict — flagged for human review |
 
 ```markdown
 The organization was founded in 1998 [^ext-1].
@@ -107,14 +108,14 @@ Founding dates differ across sources [^amb-1].
 
 ## Citations
 
-APA 7th edition throughout. Academic export supported via Pandoc.
+APA 7th edition throughout. Academic export via Pandoc.
 
-## Two-phase ingestion pipeline
+## Ingestion pipeline
 
-Ingestion runs in two conceptual phases to eliminate source-order dependency:
+Ingestion runs in two phases:
 
-1. **Extraction (read-only):** identify all entities, concepts, and claims in the source; classify each as extracted / inferred / ambiguous.
-2. **Materialization:** create or update pages, add provenance tags, flag contradictions, update index and log.
+1. **Extraction (read-only):** identify all entities, concepts, and claims in the source; classify each as extracted, inferred, or ambiguous.
+2. **Materialization:** create or update pages, add provenance footnotes, flag contradictions, update index and log.
 
 A single source typically touches 5–15 wiki pages.
 

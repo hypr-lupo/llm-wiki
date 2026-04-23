@@ -1,11 +1,12 @@
-[Español](README.md) | [English](README.en.md)
+[Español](README.md) | [English](README.es.md)
+
 # llm-wiki
 
-Una skill para construir y mantener wikis en Markdown persistentes e interconectadas a partir de fuentes crudas. El LLM escribe y mantiene todo el contenido de la wiki; el usuario curaduriza las fuentes, dirige el análisis y formula preguntas.
+Una skill para construir y mantener wikis en Markdown persistentes e interconectadas a partir de fuentes crudas. El LLM escribe y mantiene todo el contenido de la wiki; el usuario selecciona las fuentes, dirige el análisis y formula preguntas.
 
 Inspirada en el [patrón LLM Wiki de Karpathy](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f). Diseñada para [Obsidian](https://obsidian.md) como cliente principal. Compatible con cualquier LLM.
 
-> Documentación operativa completa: [`docs/flujo-de-trabajo.md`](docs/flujo-de-trabajo.md)
+> Documentación completa: [`docs/flujo-de-trabajo.md`](docs/flujo-de-trabajo.md)
 
 ---
 
@@ -13,7 +14,7 @@ Inspirada en el [patrón LLM Wiki de Karpathy](https://gist.github.com/karpathy/
 
 RAG re-descubre las mismas relaciones desde cero en cada consulta. Nada acumula.
 
-Esta skill compila las fuentes en una wiki una sola vez y la mantiene vigente. Los conceptos tienen páginas propias. Las páginas se enlazan entre sí. Cada afirmación lleva trazabilidad de procedencia. Cuando se archiva una respuesta a una consulta, las consultas futuras la usan como contexto. El conocimiento se compone con el tiempo.
+Esta skill compila las fuentes en una wiki una sola vez y la mantiene vigente. Los conceptos tienen páginas propias. Las páginas se enlazan entre sí. Cada afirmación declara su procedencia. Cuando se archiva una respuesta a una consulta, las consultas futuras la usan como contexto. El conocimiento crece con cada sesión.
 
 ```
 RAG:      consulta → buscar fragmentos → respuesta → olvidar
@@ -22,24 +23,24 @@ llm-wiki: fuentes → compilar → wiki → consultar → archivar → wiki más
 
 ## Para quién es
 
-Cualquier persona que trabaje con múltiples documentos y quiera una base de conocimiento estructurada en lugar de una carpeta de archivos. Sin restricción de dominio: investigación académica, análisis jurídico, inteligencia, periodismo, gestión del conocimiento personal, o cualquier campo donde las fuentes se acumulan y necesitan síntesis.
+Investigadores, analistas, periodistas y cualquier persona que trabaje con múltiples documentos y necesite síntesis, no solo recuperación. Investigación académica, análisis jurídico, inteligencia, periodismo, gestión del conocimiento personal — cualquier campo donde las fuentes se acumulan.
 
 ## Requisitos
 
 - Cualquier LLM con capacidad de leer y escribir archivos Markdown (Claude, ChatGPT, Gemini, u otros)
-- [Obsidian](https://obsidian.md) como cliente principal (opcional pero asumido por las convenciones de la skill)
+- [Obsidian](https://obsidian.md) como cliente principal (opcional, pero las convenciones de la skill lo asumen)
 - Sin ejecutables, sin scripts, sin dependencias externas
 
 ## Instalación
 
 ### Claude (claude.ai / Claude Code)
 
-**Opción A — npx skills:**
+**Opción A:** npx skills
 ```bash
 npx skills add git@github.com:hypr-lupo/llm-wiki.git
 ```
 
-**Opción B — manual:**
+**Opción B:** manual
 ```bash
 mkdir -p ~/.claude/skills/llm-wiki
 curl -fsSL https://raw.githubusercontent.com/hypr-lupo/llm-wiki/main/SKILL.md \
@@ -52,7 +53,7 @@ Pegar el contenido de `SKILL.md` en el system prompt o en las instrucciones pers
 
 ## Uso
 
-Activar la skill diciéndole al LLM:
+Dile a tu LLM:
 
 | Comando | Acción |
 |---|---|
@@ -60,9 +61,9 @@ Activar la skill diciéndole al LLM:
 | `ingerir [fuente]` | Procesar e integrar una fuente nueva |
 | `consultar: [pregunta]` | Consultar la wiki para obtener una respuesta sintetizada |
 | `auditar wiki` | Ejecutar revisión de salud sobre la wiki |
-| `cerrar sesión` | Generar registro de pendientes operativos de la sesión |
+| `cerrar sesión` | Generar registro de pendientes de la sesión |
 
-Ver [`docs/flujo-de-trabajo.md`](docs/flujo-de-trabajo.md) para el flujo operativo completo.
+Flujo completo: [`docs/flujo-de-trabajo.md`](docs/flujo-de-trabajo.md)
 
 ## Estructura de la wiki
 
@@ -85,7 +86,7 @@ Ver [`docs/flujo-de-trabajo.md`](docs/flujo-de-trabajo.md) para el flujo operati
 
 ## Sistema de trazabilidad
 
-Cada afirmación en la wiki lleva procedencia declarada mediante notas al pie nombradas — sintaxis Markdown estándar, compatible con exportación a DOCX, LaTeX, PDF y HTML vía Pandoc.
+Cada afirmación en la wiki declara su procedencia mediante notas al pie nombradas, compatibles con exportación a DOCX, LaTeX, PDF y HTML vía Pandoc.
 
 Tres categorías:
 
@@ -93,7 +94,7 @@ Tres categorías:
 |---|---|
 | `[^ext-N]` | Extraído directamente de una fuente |
 | `[^inf-N]` | Inferido por el LLM a partir de una o más fuentes (con confianza 0.0–1.0) |
-| `[^amb-N]` | Ambiguo — fuentes en conflicto, marcado para revisión humana |
+| `[^amb-N]` | Fuentes en conflicto — requiere revisión |
 
 ```markdown
 La organización fue fundada en 1998 [^ext-1].
@@ -107,14 +108,14 @@ Las fechas de creación difieren entre versiones [^amb-1].
 
 ## Referencias y citas
 
-Normas APA 7ma edición en todo el contenido. Exportación académica compatible con Pandoc.
+Citas y referencias en APA 7. Exportación académica vía Pandoc.
 
-## Pipeline de ingesta en dos fases
+## Ingesta en dos fases
 
-La ingesta opera en dos fases conceptuales para eliminar la dependencia del orden de las fuentes:
+La ingesta opera en dos fases:
 
 1. **Extracción (solo lectura):** identificar todas las entidades, conceptos y afirmaciones de la fuente; clasificar cada afirmación como extraída, inferida o ambigua.
-2. **Materialización:** crear o actualizar páginas, añadir notas de trazabilidad, registrar contradicciones, actualizar índice y bitácora.
+2. **Materialización:** crear o actualizar páginas, añadir notas de procedencia, registrar contradicciones, actualizar índice y bitácora.
 
 Una fuente promedio toca entre 5 y 15 páginas de la wiki.
 
