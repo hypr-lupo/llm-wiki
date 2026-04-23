@@ -1,0 +1,31 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Obsidian (vault personal — no versionar)
+.obsidian/
+
+# Secretos y credenciales
+.env
+.env.local
+secrets/
+tokens/
+*.key
+*.pem
+
+# Datos sensibles personales
+personal/
+private/
+
+# Archivos de compilación
+*.pdf
+*.docx
+*.epub
